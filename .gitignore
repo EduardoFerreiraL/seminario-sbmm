@@ -1,0 +1,19 @@
+# Credenciais e variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Datasets locais
+games.csv
+*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Streamlit
+.streamlit/
