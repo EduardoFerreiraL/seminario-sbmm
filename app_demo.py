@@ -103,7 +103,28 @@ with col2:
             latencia_ms = (time.perf_counter() - t0) * 1000
 
         df_match = pd.DataFrame(rpc_res.data)
-        win_prob = float(df_match["predicted_team1_win_prob"].iloc[0])
+
+        # A RPC pode devolver predicted_team1_win_prob = NULL quando um dos times
+        # fica vazio (média de 0 linhas = NULL no SQL). Validamos antes de converter.
+        n_t1 = int((df_match.get("assigned_team") == "Time 1 (Azul)").sum()) if not df_match.empty else 0
+        n_t2 = int((df_match.get("assigned_team") == "Time 2 (Vermelho)").sum()) if not df_match.empty else 0
+        prob_serie = (
+            pd.to_numeric(df_match["predicted_team1_win_prob"], errors="coerce").dropna()
+            if "predicted_team1_win_prob" in df_match
+            else pd.Series(dtype=float)
+        )
+
+        if df_match.empty or prob_serie.empty or n_t1 == 0 or n_t2 == 0:
+            st.error(
+                "⚠️ A função `matchmake_in_db` não conseguiu formar dois times para este jogador "
+                f"(Time 1: {n_t1} jogadores | Time 2: {n_t2} jogadores), "
+                "então a probabilidade de vitória veio `NULL`."
+            )
+            st.caption("Retorno bruto da RPC, para diagnóstico:")
+            st.dataframe(df_match, width="stretch", hide_index=True)
+            st.stop()
+
+        win_prob = float(prob_serie.iloc[0])
         equilibrado = 48.0 <= win_prob <= 52.0
 
         m1, m2, m3 = st.columns(3)
