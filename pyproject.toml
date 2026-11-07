@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "seminario-sbmm"
+version = "0.1.0"
+description = "Skill-Based Matchmaking (SBMM) com In-Database ML"
+requires-python = ">=3.9"
+dependencies = [
+    "pandas",
+    "numpy",
+    "python-dotenv",
+    "supabase",
+    "streamlit",
+]
+
+# Cria o comando global `run` (ex.: `run dev`) após `pip install -e .`
+[project.scripts]
+run = "dev:main"
+
+[tool.setuptools]
+py-modules = ["dev"]
+

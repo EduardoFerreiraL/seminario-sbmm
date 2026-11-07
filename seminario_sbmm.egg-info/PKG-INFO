@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: seminario-sbmm
+Version: 0.1.0
+Summary: Skill-Based Matchmaking (SBMM) com In-Database ML
+Requires-Python: >=3.9
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: python-dotenv
+Requires-Dist: supabase
+Requires-Dist: streamlit

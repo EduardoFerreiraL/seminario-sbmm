@@ -30,3 +30,22 @@ Demonstração prática de **Skill-Based Matchmaking (SBMM)** aplicado ao League
    ```bash
    streamlit run app_demo.py
    ```
+
+### ⚡ Atalho: `run dev`
+
+Instale o projeto uma vez em modo editável para criar o comando `run`:
+
+```bash
+pip install -e .
+run dev       # inicia o Streamlit (app_demo.py)
+run seed      # popula o Supabase (popular_supabase.py)
+run install   # instala o requirements.txt
+```
+
+> Se o `pip` avisar que a pasta `Scripts` não está no PATH, adicione-a ao PATH ou use os atalhos locais: `run dev` no **cmd**, `.\run dev` no **PowerShell**, ou `python dev.py dev`.
+
+## 🧠 Explicabilidade (aba "Como o SGBD chegou aqui")
+
+Após executar o matchmaking, a aba **🧠 Como o SGBD chegou aqui** mostra o pipeline em 4 etapas (Vetorização → KNN/HNSW → Snake Draft → Regressão Logística), cada uma com explicação, dados reais da partida e o trecho SQL responsável, além de uma **prova de consistência** automática.
+
+Para que os intermediários venham do próprio PostgreSQL e o plano de execução (`EXPLAIN ANALYZE`) apareça, rode uma vez o arquivo `explain_helpers.sql` no SQL Editor do Supabase. Ele cria `matchmake_explain` e `explain_knn` e ajusta `matchmake_in_db` para que o índice HNSW possa ser usado. Sem ele, o app funciona normalmente e recalcula os intermediários no Python.

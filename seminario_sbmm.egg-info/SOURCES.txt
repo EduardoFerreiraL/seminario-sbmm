@@ -1,0 +1,9 @@
+README.md
+dev.py
+pyproject.toml
+seminario_sbmm.egg-info/PKG-INFO
+seminario_sbmm.egg-info/SOURCES.txt
+seminario_sbmm.egg-info/dependency_links.txt
+seminario_sbmm.egg-info/entry_points.txt
+seminario_sbmm.egg-info/requires.txt
+seminario_sbmm.egg-info/top_level.txt
