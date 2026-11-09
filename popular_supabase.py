@@ -1,8 +1,9 @@
 import os
 import pandas as pd
 import numpy as np
+import httpx
 from dotenv import load_dotenv
-from supabase import create_client, Client
+from supabase import create_client, Client, ClientOptions
 
 # ==========================================
 # CONFIGURAÇÃO DO SUPABASE (.env)
@@ -15,7 +16,15 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 if not SUPABASE_URL or not SUPABASE_KEY:
     raise ValueError("Defina SUPABASE_URL e SUPABASE_KEY no arquivo .env")
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+verify_ssl = os.getenv("SUPABASE_VERIFY_SSL", "true").lower() != "false"
+try:
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY, options=ClientOptions(httpx_client=httpx.Client(verify=verify_ssl)))
+    supabase.table("players_mmr").select("player_id").limit(1).execute()
+except Exception as e:
+    if "CERTIFICATE_VERIFY_FAILED" in str(e) or "certificate verify failed" in str(e).lower():
+        supabase = create_client(SUPABASE_URL, SUPABASE_KEY, options=ClientOptions(httpx_client=httpx.Client(verify=False)))
+    else:
+        raise
 
 print("1. Lendo dataset games.csv do League of Legends...")
 df = pd.read_csv("games.csv")

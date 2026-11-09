@@ -17,32 +17,51 @@ Demonstração prática de **Skill-Based Matchmaking (SBMM)** aplicado ao League
 
 ## ⚙️ Como Executar
 
-1. Instale as dependências:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Copie o arquivo `.env.example` para `.env` e preencha suas credenciais do Supabase (`SUPABASE_URL` e `SUPABASE_KEY`).
-3. Coloque o dataset `games.csv` na raiz do projeto e popule o banco:
-   ```bash
-   python popular_supabase.py
-   ```
-4. Inicie a demonstração com Streamlit:
-   ```bash
-   streamlit run app_demo.py
-   ```
+### Pré-requisitos
+- Python 3.10+ instalado.
+- Arquivo `.env` configurado com `SUPABASE_URL` e `SUPABASE_KEY` (copie de `.env.example`).
 
-### ⚡ Atalho: `run dev`
+### 1. Criar e ativar o ambiente virtual (Recomendado ao mudar de computador)
 
-Instale o projeto uma vez em modo editável para criar o comando `run`:
+No **PowerShell**:
+```powershell
+# Cria o ambiente virtual
+python -m venv .venv
 
-```bash
-pip install -e .
-run dev       # inicia o Streamlit (app_demo.py)
-run seed      # popula o Supabase (popular_supabase.py)
-run install   # instala o requirements.txt
+# Ativa o ambiente
+.\.venv\Scripts\Activate.ps1
+
+# Instala as dependências
+pip install -r requirements.txt
 ```
 
-> Se o `pip` avisar que a pasta `Scripts` não está no PATH, adicione-a ao PATH ou use os atalhos locais: `run dev` no **cmd**, `.\run dev` no **PowerShell**, ou `python dev.py dev`.
+No **Prompt de Comando (CMD)**:
+```cmd
+python -m venv .venv
+.\.venv\Scripts\activate.bat
+pip install -r requirements.txt
+```
+
+### 2. Iniciar a aplicação
+
+Com o ambiente ativado:
+```bash
+streamlit run app_demo.py
+```
+
+Ou diretamente pelo caminho do ambiente virtual (sem precisar ativar):
+```powershell
+.\.venv\Scripts\streamlit.exe run app_demo.py
+```
+
+### ⚡ Atalhos de execução
+
+Você pode usar os scripts utilitários inclusos na raiz:
+- No **PowerShell**: `.\run.ps1 dev` ou `python dev.py dev`
+- No **CMD**: `run.cmd dev` ou `run dev`
+- Outros comandos: `dev` (dashboard), `seed` (popular banco), `install` (instalar dependências).
+
+> **Dica de rede/firewall corporativo**: Caso esteja em uma rede com inspeção SSL/proxy (ex: Fortinet), a aplicação já possui fallback automático para contornar falhas de validação de certificado local.
 
 ## 🧠 Explicabilidade (aba "Como o SGBD chegou aqui")
 

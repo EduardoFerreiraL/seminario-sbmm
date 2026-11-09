@@ -11,10 +11,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 
+def get_python() -> str:
+    venv_py = ROOT / ".venv" / ("Scripts/python.exe" if sys.platform == "win32" else "bin/python")
+    if venv_py.exists():
+        return str(venv_py)
+    return sys.executable
+
+py_bin = get_python()
+
 COMMANDS = {
-    "dev": [sys.executable, "-m", "streamlit", "run", "app_demo.py"],
-    "seed": [sys.executable, "popular_supabase.py"],
-    "install": [sys.executable, "-m", "pip", "install", "-r", "requirements.txt"],
+    "dev": [py_bin, "-m", "streamlit", "run", "app_demo.py"],
+    "seed": [py_bin, "popular_supabase.py"],
+    "install": [py_bin, "-m", "pip", "install", "-r", "requirements.txt"],
 }
 
 

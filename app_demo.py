@@ -5,9 +5,10 @@ import re
 import time
 import altair as alt
 import pandas as pd
+import httpx
 import streamlit as st
 from dotenv import load_dotenv
-from supabase import create_client, Client
+from supabase import create_client, Client, ClientOptions
 
 # ==========================================
 # CONFIGURAÇÃO E CONEXÃO (.env)
@@ -78,7 +79,15 @@ RETURN ROUND((prob * 100)::numeric, 2);"""
 
 @st.cache_resource
 def get_supabase() -> Client:
-    return create_client(SUPABASE_URL, SUPABASE_KEY)
+    verify_ssl = os.getenv("SUPABASE_VERIFY_SSL", "true").lower() != "false"
+    try:
+        c = create_client(SUPABASE_URL, SUPABASE_KEY, options=ClientOptions(httpx_client=httpx.Client(verify=verify_ssl)))
+        c.table("players_mmr").select("player_id").limit(1).execute()
+        return c
+    except Exception as e:
+        if "CERTIFICATE_VERIFY_FAILED" in str(e) or "certificate verify failed" in str(e).lower():
+            return create_client(SUPABASE_URL, SUPABASE_KEY, options=ClientOptions(httpx_client=httpx.Client(verify=False)))
+        raise
 
 
 def _parse_vector(v):
