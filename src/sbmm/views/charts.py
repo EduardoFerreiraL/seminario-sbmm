@@ -29,14 +29,27 @@ def vector_space_chart(df_players: pd.DataFrame, df_match: pd.DataFrame, anchor_
         color=alt.Color("Grupo:N", scale=escala, legend=alt.Legend(orient="bottom", title=None)),
         tooltip=["summoner_name", "mmr", "winrate", "aggression_score", "Grupo"],
     )
-    fila = base.transform_filter(alt.datum.Grupo == GRUPO_FILA).mark_circle(size=35, opacity=0.5)
+    fila = base.transform_filter(alt.datum.Grupo == GRUPO_FILA).mark_circle(size=42, opacity=0.45)
     vizinhos = base.transform_filter(
         (alt.datum.Grupo == TEAM_AZUL) | (alt.datum.Grupo == TEAM_VERM)
-    ).mark_circle(size=120, opacity=0.95, stroke="white", strokeWidth=1)
+    ).mark_circle(size=135, opacity=0.95, stroke="#0b0d13", strokeWidth=1.5)
     ancora = base.transform_filter(alt.datum.Grupo == GRUPO_ANCORA).mark_point(
-        shape="diamond", size=350, filled=True, stroke="black", strokeWidth=1
+        shape="diamond", size=380, filled=True, stroke="#ffffff", strokeWidth=1.8
     )
-    return (fila + vizinhos + ancora).properties(height=340).interactive()
+    return (
+        (fila + vizinhos + ancora)
+        .properties(height=340, background="transparent")
+        .configure_axis(
+            gridColor="#1e2336",
+            domainColor="#2e354f",
+            tickColor="#2e354f",
+            labelColor="#94a3b8",
+            titleColor="#cbd5e1",
+        )
+        .configure_legend(labelColor="#cbd5e1")
+        .configure_view(strokeWidth=0)
+        .interactive()
+    )
 
 
 def sigmoid_chart(z: float, prob_pct: float) -> alt.LayerChart:
@@ -45,14 +58,25 @@ def sigmoid_chart(z: float, prob_pct: float) -> alt.LayerChart:
     pts = [-lim + i * (2 * lim) / 200 for i in range(201)]
     curve = pd.DataFrame({"z": pts, "P": [sigmoid_pct(x) for x in pts]})
     zona = alt.Chart(pd.DataFrame({"y1": [BALANCE_MIN], "y2": [BALANCE_MAX]})).mark_rect(
-        opacity=0.25, color="#2ca02c"
+        opacity=0.18, color="#10b981"
     ).encode(y="y1:Q", y2="y2:Q")
-    linha = alt.Chart(curve).mark_line(color="#555555").encode(
+    linha = alt.Chart(curve).mark_line(color="#8b5cf6", strokeWidth=2.5).encode(
         x=alt.X("z:Q", title="z (combinação linear)"),
         y=alt.Y("P:Q", title="P(vitória Time 1) %", scale=alt.Scale(domain=[0, 100])),
     )
     ponto = alt.Chart(pd.DataFrame({"z": [z], "P": [prob_pct]})).mark_point(
-        size=250, filled=True, color=COR_AZUL, stroke="black"
+        size=260, filled=True, color="#c4b5fd", stroke="#7c3aed", strokeWidth=2
     ).encode(x="z:Q", y="P:Q", tooltip=["z", "P"])
-    return (zona + linha + ponto).properties(height=260)
+    return (
+        (zona + linha + ponto)
+        .properties(height=260, background="transparent")
+        .configure_axis(
+            gridColor="#1e2336",
+            domainColor="#2e354f",
+            tickColor="#2e354f",
+            labelColor="#94a3b8",
+            titleColor="#cbd5e1",
+        )
+        .configure_view(strokeWidth=0)
+    )
 

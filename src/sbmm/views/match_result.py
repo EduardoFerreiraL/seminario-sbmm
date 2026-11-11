@@ -8,6 +8,7 @@ import streamlit as st
 from sbmm.config.constants import BALANCE_MAX, BALANCE_MIN, TEAM_AZUL, TEAM_VERM
 from sbmm.domain.errors import MatchmakingError
 from sbmm.domain.models import MatchResult
+from sbmm.views import styles
 
 _COLS = ["summoner_name", "main_role", "mmr", "winrate", "vector_distance"]
 
@@ -25,9 +26,10 @@ def render_metrics(match: MatchResult) -> None:
     )
     m2.metric("Distância Vetorial Máxima (KNN)", f"{match.max_distance:.4f}")
     m3.metric("Tempo de Resposta Total (RPC)", f"{match.latency_ms:.1f} ms")
+    styles.render_balance_bar(match.win_prob, BALANCE_MIN, BALANCE_MAX)
 
 
-def _team_table(title: str, team: pd.DataFrame) -> None:
+def _team_table(title: str, team: pd.DataFrame, *, is_team_blue: bool) -> None:
     col_config = {
         "summoner_name": st.column_config.TextColumn("Invocador"),
         "main_role": st.column_config.TextColumn("Role"),
@@ -35,18 +37,23 @@ def _team_table(title: str, team: pd.DataFrame) -> None:
         "winrate": st.column_config.NumberColumn("Winrate (%)", format="%.2f%%"),
         "vector_distance": st.column_config.NumberColumn("Distância KNN", format="%.4f"),
     }
-    st.markdown(f"#### {title}")
-    st.dataframe(team, column_config=col_config, width="stretch", hide_index=True)
-    st.caption(f"**MMR Médio:** {team['mmr'].mean():.1f} | **Winrate Médio:** {team['winrate'].mean():.1f}%")
+    with st.container(border=True):
+        styles.render_team_header(
+            title,
+            float(team["mmr"].mean()),
+            float(team["winrate"].mean()),
+            is_team_blue=is_team_blue,
+        )
+        st.dataframe(team, column_config=col_config, width="stretch", hide_index=True)
 
 
 def render_teams(match: MatchResult) -> None:
     df = match.players
     c_azul, c_verm = st.columns(2)
     with c_azul:
-        _team_table("🔵 Time 1 (Azul)", df[df["assigned_team"] == TEAM_AZUL][_COLS])
+        _team_table("🔵 Time 1 (Azul)", df[df["assigned_team"] == TEAM_AZUL][_COLS], is_team_blue=True)
     with c_verm:
-        _team_table("🔴 Time 2 (Vermelho)", df[df["assigned_team"] == TEAM_VERM][_COLS])
+        _team_table("🔴 Time 2 (Vermelho)", df[df["assigned_team"] == TEAM_VERM][_COLS], is_team_blue=False)
 
 
 def render_invalid_match(err: MatchmakingError) -> None:

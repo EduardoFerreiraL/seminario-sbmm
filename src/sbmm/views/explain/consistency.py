@@ -10,9 +10,6 @@ from sbmm.domain.models import RegressionExplain
 
 
 def render(df_snake: pd.DataFrame, e: RegressionExplain, win_prob: float, origem_sgbd: bool) -> None:
-    st.markdown("#### ✅ Prova de consistência")
-    st.caption("Conferências automáticas que mostram que a explicação acima corresponde ao que o SGBD executou.")
-
     r = check_consistency(df_snake, e, win_prob)
     checks = [
         ("Snake Draft recalculado no Python gera os **mesmos times** que o SQL", r.teams_match),
@@ -26,6 +23,8 @@ def render(df_snake: pd.DataFrame, e: RegressionExplain, win_prob: float, origem
             r.explain_matches,
         ),
     ]
-    for txt, ok in checks:
-        st.markdown(f"{'✅' if ok else '❌'} {txt}")
-
+    with st.container(border=True):
+        st.markdown("#### ✅ Prova de consistência")
+        st.caption("Conferências automáticas que mostram que a explicação acima corresponde ao que o SGBD executou.")
+        for txt, ok in checks:
+            st.markdown(f"{'✅' if ok else '❌'} {txt}")

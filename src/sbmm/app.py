@@ -18,12 +18,13 @@ import streamlit as st  # noqa: E402
 
 from sbmm.controllers.matchmaking_controller import get_controller  # noqa: E402
 from sbmm.infra.logging_config import setup_logging  # noqa: E402
-from sbmm.views import header  # noqa: E402
+from sbmm.views import header, styles  # noqa: E402
 
 
 def main() -> None:
     setup_logging()
     st.set_page_config(page_title="SBMM In-Database ML - LoL", page_icon="🎮", layout="wide")
+    styles.inject_global_styles()
     header.render()
     controller = get_controller()
     if controller is not None:

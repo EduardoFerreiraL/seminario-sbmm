@@ -12,7 +12,7 @@ from sbmm.domain.errors import ConfigError, DataAccessError, MatchmakingError
 from sbmm.infra.supabase_client import create_supabase
 from sbmm.repositories import MatchmakingRepository, ModelRepository, PlayerRepository
 from sbmm.services import MatchmakingService
-from sbmm.views import anchor_panel, explain, match_result
+from sbmm.views import anchor_panel, explain, match_result, styles
 
 log = logging.getLogger(__name__)
 _STATE_KEY = "resultado"
@@ -60,7 +60,7 @@ class MatchmakingController:
         with col1:
             anchor_row, executar = anchor_panel.render(df_players)
         with col2:
-            st.subheader("2. Resultado do Cluster KNN + Predição dentro do SGBD")
+            styles.render_section_title("02", "Resultado do Cluster KNN + Predição dentro do SGBD")
             anchor_id = int(anchor_row["player_id"])
             if executar:
                 self._execute(anchor_id)
@@ -81,10 +81,7 @@ class MatchmakingController:
     def _render_result(self, df_players: pd.DataFrame, anchor_row: pd.Series, anchor_id: int) -> None:
         resultado = st.session_state.get(_STATE_KEY)
         if not resultado or resultado["anchor_id"] != anchor_id:
-            st.info(
-                "👈 Selecione um jogador âncora ao lado e clique em **Executar Matchmaking In-DB** "
-                "para formar a partida em tempo real."
-            )
+            styles.render_empty_state()
             return
 
         err = resultado.get("error")

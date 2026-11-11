@@ -53,7 +53,7 @@ def render(e: RegressionExplain, origem_sgbd: bool) -> None:
         rf" = \mathbf{{{e.prob_pct:.2f}\%}}"
     )
     st.altair_chart(sigmoid_chart(e.z, e.prob_pct), width="stretch")
-    st.caption("Curva sigmoide: a faixa verde (48% a 52%) é a **zona de equilíbrio**. O ponto azul é esta partida.")
+    st.caption("Curva sigmoide: a faixa verde (48% a 52%) é a **zona de equilíbrio**. O ponto roxo é esta partida.")
     st.markdown("**🧾 Trecho SQL responsável:**")
     st.code(SQL_REGRESSAO, language="sql")
 

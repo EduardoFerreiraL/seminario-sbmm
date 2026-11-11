@@ -19,8 +19,8 @@ WR_MIN, WR_MAX = 35.0, 72.0
 AGG_MAX = 12.0
 DUR_MAX_MIN = 60.0
 
-# --- Cores dos gráficos ---
-COR_AZUL, COR_VERM, COR_FILA, COR_ANCORA = "#1f77b4", "#d62728", "#c7c7c7", "#f5b700"
+# --- Cores dos gráficos (otimizadas para tema escuro) ---
+COR_AZUL, COR_VERM, COR_FILA, COR_ANCORA = "#3b82f6", "#f43f5e", "#475569", "#f59e0b"
 
 # --- Colunas numéricas vindas do banco ---
 PLAYER_NUMERIC_COLS = ("mmr", "winrate", "aggression_score", "avg_game_duration")

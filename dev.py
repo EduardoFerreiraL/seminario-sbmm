@@ -1,7 +1,7 @@
 """Atalhos de execução do projeto.
 
 Uso:
-    run dev      -> inicia o dashboard Streamlit (app_demo.py)
+    run dev      -> inicia o dashboard Streamlit (src/sbmm/app.py)
     run seed     -> popula o Supabase (popular_supabase.py)
     run install  -> instala as dependências do requirements.txt
 """
@@ -20,7 +20,7 @@ def get_python() -> str:
 py_bin = get_python()
 
 COMMANDS = {
-    "dev": [py_bin, "-m", "streamlit", "run", "app_demo.py"],
+    "dev": [py_bin, "-m", "streamlit", "run", "src/sbmm/app.py"],
     "seed": [py_bin, "popular_supabase.py"],
     "install": [py_bin, "-m", "pip", "install", "-r", "requirements.txt"],
 }
